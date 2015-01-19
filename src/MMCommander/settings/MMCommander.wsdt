@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>template_cc1110/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>442</Column0><Column1>27</Column1><Column2>27</Column2><Column3>10673952</Column3></ColumnWidths>
+      <PreferedWindows><Position>4</Position><ScreenPosX>7</ScreenPosX><ScreenPosY>68</ScreenPosY><Windows/></PreferedWindows></Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>915</ColumnWidth1><ColumnWidth2>244</ColumnWidth2><ColumnWidth3>61</ColumnWidth3></Build>
+    <Debug-Log><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1221</ColumnWidth1></Debug-Log><TerminalIO/><Find-All-References><ColumnWidth0>661</ColumnWidth0><ColumnWidth1>94</ColumnWidth1><ColumnWidth2>1134</ColumnWidth2></Find-All-References></Static>
+    <Windows>
+      
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-19846-26941</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-15133-20317</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-12858-148</Identity><TabName>Find All References</TabName><Factory>Find-All-References</Factory><Session/></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-25787-12815</Identity><TabName>Workspace</TabName><Factory>Workspace</Factory><Session><NodeDict><ExpandedNode>template_cc1110</ExpandedNode><ExpandedNode>template_cc1110/Headers</ExpandedNode><ExpandedNode>template_cc1110/Sources</ExpandedNode></NodeDict></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\medtronicRF.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>113</YPos2><SelStart2>3522</SelStart2><SelEnd2>3522</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\init.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>45</YPos2><SelStart2>2382</SelStart2><SelEnd2>2382</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\interrupts.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>77</YPos2><SelStart2>1554</SelStart2><SelEnd2>1554</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\MMCommander.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>5</YPos2><SelStart2>1046</SelStart2><SelEnd2>1046</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\configuration.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>326</SelStart2><SelEnd2>326</SelEnd2></Tab><ActiveTab>4</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-01005288><key>iaridepm.enu1</key></Toolbar-01005288></Sizes></Row0><Row1><Sizes/></Row1><Row2><Sizes/></Row2></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>699</Bottom><Right>516</Right><x>-2</x><y>-2</y><xscreen>123</xscreen><yscreen>91</yscreen><sizeHorzCX>64196</sizeHorzCX><sizeHorzCY>105202</sizeHorzCY><sizeVertCX>270355</sizeVertCX><sizeVertCY>810405</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>121</Bottom><Right>1918</Right><x>-2</x><y>-2</y><xscreen>1920</xscreen><yscreen>123</yscreen><sizeHorzCX>1002088</sizeHorzCX><sizeHorzCY>142197</sizeHorzCY><sizeVertCX>39666</sizeVertCX><sizeVertCY>76301</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+
