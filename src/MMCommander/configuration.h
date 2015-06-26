@@ -5,12 +5,12 @@
 // this interface in the US and must be set to 0 in Europe and Asia. When set
 // to 1 the operation frequency will be 916.5 MHz and when 0 will be 868.35 
 // MHz.
-#define _USA_FREQUENCY_MODE_ 1
+#define _USA_FREQUENCY_MODE_ 0
 
 // The parameter _TX_ENABLE_ must be set to 1 if you want the interface
 // to be capable of transmitting any signal to the air. If 0, the MMCommander
 // will act as a sniffer only.
-#define _TX_ENABLE_ 0
+#define _TX_ENABLE_ 1
 
 // The parameter _TX_FILTER_ENABLE_ must be set to 1 if you want the interface
 // to filter certain types of messages from being sent. This mode will be 
@@ -35,6 +35,6 @@
 #define _REPEATED_COMMAND_ENABLED_ 1
 
 // The version number is defined here for identification purposes.
-#define _MMCOMMANDER_VERSION_ 87
+#define _MMCOMMANDER_VERSION_ 89
 
 #endif

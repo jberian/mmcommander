@@ -11,7 +11,7 @@
 #include "interrupts.h"
 
 // Globals
-static char   __xdata rfMessage[512];
+static char   __xdata rfMessage[128];
 static unsigned int __xdata rfLength;
 static int    __xdata txCalcCRC;
 static int    __xdata txCalcCRC16;
@@ -25,6 +25,8 @@ void sendMedtronicMessage (char *message, unsigned int length, int times)
   
   encode4b6b (message, length, rfMessage, &rfLength);
   PKTLEN = rfLength;
+  
+  stopTimerInt ();
   
   RFST = RFST_SIDLE;
   
@@ -43,7 +45,9 @@ void sendMedtronicMessage (char *message, unsigned int length, int times)
   
   PKTLEN = 0xFF;
   RFST = RFST_SIDLE;
-  RFST = RFST_SRX;    
+  RFST = RFST_SRX;   
+  
+  enableTimerInt ();
 }
 
 char receiveMedtronicMessage (char *message, unsigned int *length)
@@ -57,17 +61,29 @@ char receiveMedtronicMessage (char *message, unsigned int *length)
 
   PKTLEN = 0xFF;
   lastData = 0xFF;
-  for (i=0; i<500 && lastData != 0x00; i++) {
+  enableTimerInt ();
+  for (i=0; i<128 && lastData != 0x00; i++) {
     while (!RFTXRXIF) {
         usbUartProcess();
         usbReceiveData();
+        if (RFIF & 0x40) {
+          RFIF &= 0xBF; 
+          lastData = 0xFF;
+          i = 0;
+          RFST = RFST_SIDLE;
+          RFST = RFST_SRX;
+          resetTimerCounter();
+        }
     }
+    stopTimerInt ();
     rfMessage[i] = RFD;
     lastData = rfMessage[i];
     TCON &= ~0x02;
   }   
   rfLength = i-1;
   RFST = RFST_SIDLE;
+  
+  //P1_1 = ~P1_1;
   
   decode4b6b(rfMessage,rfLength,message,length);
   calcCRC = crc8(message,(*length)-1);

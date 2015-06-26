@@ -5,9 +5,6 @@
 /*
  * Known issues:
  *       - Pause & resume timer using system time.
- *       - Enlite transmissions are not correctly received by a real pump.
- *         Possibly a RF problem.
- *       - Does not respond to all commands.
  *
  */
 
@@ -58,7 +55,8 @@ char             enliteID  [3]      ;
 char             enliteData [9*2]   ;
 int              enliteWarmupCnt    ;
 char             enliteNumSeq       ;
-float            enlitePeriod       ;
+float            enlitePeriod    [8]   = {307, 241, 357, 271, 335, 206, 246, 326};
+float            enliteIntPeriod [8]   = { 16,  17,  17,  11,  13,  12,  14,  11};
 int              enliteGlucose      ;
 int              enliteBeep         ;
 char             enliteBatLevel     ;
@@ -82,6 +80,9 @@ char             historyReading     ;
 int              historyPage        ;
 int              historyLine        ;
 int              timerActive        ;
+int              mySentrySyncOn     ;
+int              mySentryActive     ;
+char             mySentryID  [3]    ;
 struct itimerval timervalue         ;
 struct itimerval timervalue2        ;
 float            time2enlite        ;
@@ -106,18 +107,16 @@ int main(int argc, char **argv)
     printf("     Parameters: -p  [pumpID]       -> Pump to be simulated.\n");
     printf("                 -e  [enliteID]     -> Enlite transmitter to be simulated.\n");
     printf("                 -g  [glucometerID] -> Glucometer to be simulated.\n");
+    printf("                 -m  [mySentryID]   -> MySentry to be simulated.\n");
     printf("                 -n  [minutes]      -> Enable new sensor mode.\n");
-    printf("                 -t  [minutes]      -> Minutes between Enlite transmissions.\n");
-    printf("                                        (0 minutes = manual mode)\n");
-    printf("                 -i  [glucose]      -> Force Enlite simulator to a fixed glucose value.\n");
-    printf("                 -b                 -> Beep when an Enlite message is received,\n\n");
+    printf("                 -i  [glucose]      -> Force Enlite simulator to a fixed glucose value.\n\n");
     return(-1);
   }
 
   // Init text
   printf("\n ----------------------------------------------------------------------------------------\n");
   printf(" |                                                                                      |\n");
-  printf(" | Medtronic system simulator.   v0.101                                                 |\n");
+  printf(" | Medtronic system simulator.   v0.104                                                 |\n");
   printf(" |                                                                                      |\n");
   printf(" |                                           Jesus Berian (jesus.berian@gmail.com)      |\n");
   printf(" |                                                                                      |\n");
@@ -135,16 +134,19 @@ int main(int argc, char **argv)
   glucometerID[1] = 0x00;
   glucometerID[2] = 0x00;
   glucometerActive = 0;
+  mySentrySyncOn   = 0;
+  mySentryActive   = 0;
+  mySentryID[0]   = 0x00;
+  mySentryID[1]   = 0x00;
+  mySentryID[2]   = 0x00;
   enliteOutOfRange = 0;
   enliteActive    = 0;
   enliteWarmupCnt = 0;
-  enlitePeriod    = 5*60*1000;
   enliteGlucose   = -1;
   enliteBeep      = 0;
   enliteBatLevel  = 0x60;
-  enliteISIGadj   = 0x23;
+  enliteISIGadj   = 0x21;
   enliteDataPhase = 0.0;
-  enliteManualMode = 0;
   enliteNumSeq    = 0;
   time2enlite     = 0.0;
   firstTime       = 0;
@@ -164,7 +166,7 @@ int main(int argc, char **argv)
   strcpy(fdDev,argv[1]);
 
   // Get parameters
-  while ((c = getopt (argc, argv, "p:e:n:t:g:i:b")) != -1)
+  while ((c = getopt (argc, argv, "m:p:e:n:g:i:")) != -1)
     switch (c)
       {
       case 'p':
@@ -175,6 +177,15 @@ int main(int argc, char **argv)
 	pumpActive  = 1;
 	printf(" - Paradigm Veo 754 Pump simulated : %.2X%.2X%.2X\n",
            (pumpID[2]&0x00FF),(pumpID[1]&0x00FF),(pumpID[0]&0x00FF));
+	break;
+      case 'm':
+        sscanf(optarg,"%X",&param);
+	mySentryID[0]   = (char)( param        & 0x000000FF);
+	mySentryID[1]   = (char)((param >>  8) & 0x000000FF);
+	mySentryID[2]   = (char)((param >> 16) & 0x000000FF);
+	mySentryActive  = 1;
+	printf(" - MySentry simulated : %.2X%.2X%.2X\n",
+           (mySentryID[2]&0x00FF),(mySentryID[1]&0x00FF),(mySentryID[0]&0x00FF));
 	break;
       case 'g':
         sscanf(optarg,"%X",&param);
@@ -202,24 +213,9 @@ int main(int argc, char **argv)
         enliteWarmupCnt = (int)(floor(paramf/5.0));
 	printf(" - New sensor simulation active for %.2f minutes.\n",paramf);
 	break;
-      case 't':
-	sscanf(optarg,"%f",&paramf);
-	if (paramf == 0.0) {
-	  enliteManualMode = 1;
-	  printf(" - Enlite manual mode enabled. Press 'e' or 'E' to transmit an enlite message.\n");
-	} else {
-	  enliteManualMode = 0;
-	  enlitePeriod = paramf*60*1000;
-	  printf(" - Time between Enlite transmissions: %.2f minutes.\n",enlitePeriod/(60*1000));
-	}
-	break;
       case 'i':
 	sscanf(optarg,"%d",&enliteGlucose);
 	printf(" - Glucose value simulated: %d mg/dl\n",enliteGlucose);
-	break;
-      case 'b':
-	printf(" - Beep enabled for Enlite messages.\n");
-	enliteBeep = 1;
 	break;
       }
 
@@ -272,7 +268,7 @@ int main(int argc, char **argv)
   }
 
   // Start timer to transmit Enlite data frames   
-  if ((enliteActive == 1) && (enliteManualMode == 0)) {
+  if (enliteActive == 1) {
     if(start_timer(30*1000, &enliteTx))
     {
       printf("\n [ERROR] Timer error\n\n");
@@ -281,7 +277,7 @@ int main(int argc, char **argv)
   }
 
   // Report simulation mode
-  if ((pumpActive == 1) || (enliteActive == 1)) {  
+  if ((mySentryActive == 1) || (pumpActive == 1) || (enliteActive == 1)) {  
     printf("\n - REMEMBER TO DISABLE THE TX FILTER!\n");
   } else {
     printf(" - Sniffer mode.\n");
@@ -327,13 +323,6 @@ int main(int argc, char **argv)
 	  write(fdMMCommander, txMessage, 9);
 	  sleep(0.5);
 	  resume_timer(4500);
-	}
-	break;
-      case 'e':
-      case 'E':
-	printf("\b \b");
-	if (enliteManualMode == 1) {
-	  enliteTx();
 	}
 	break;
       case 'o':
@@ -447,7 +436,7 @@ int main(int argc, char **argv)
 	    if (((rxMessage[2]&0x00FF == 0x00AA) || (rxMessage[2]&0x00FF == 0x00AB)) &&
 		(enliteBeep == 1)) Beep(587,500);
             printf ("\n");
-            if (pumpActive == 1) processRx ( &rxMessage[2] , (int)(msgLength));
+            if ((pumpActive == 1) || (mySentryActive == 1)) processRx ( &rxMessage[2] , (int)(msgLength));
 	  } else {
             printf (" RX : \033[1;31mNull message - This situation shouldn't happen\033[0m.\n");
 	  }
@@ -466,7 +455,7 @@ int main(int argc, char **argv)
 	    if (((lastMessage[2]&0x00FF == 0x00AA) || (lastMessage[2]&0x00FF == 0x00AB)) &&
 		(enliteBeep == 1)) Beep(587,500);
             printf ("\n");
-            if (pumpActive == 1) processRx ( &lastMessage[2] , (int)(lastLength));
+            if ((pumpActive == 1) || (mySentryActive == 1)) processRx ( &lastMessage[2] , (int)(lastLength));
 	  } else {
             printf (" RX : \033[1;31mNull message - This situation shouldn't happen\033[0m.");
 	    if ((lastMessage[0] & 0x00FF) == 0x0082) printf(" - CRC ERROR");
@@ -508,17 +497,19 @@ void enliteTx(void)
   int newISIG;
   int i;
   float newGlucose;
+  float enliteTimer;
   char  enliteTxMessage [4096] ;
 
   // Reset timer
-  if (enliteManualMode == 0) start_timer((int)enlitePeriod, &enliteTx);
+  enliteTimer = (enlitePeriod[enliteNumSeq] + enliteIntPeriod[enliteNumSeq]) * 1000.0;
+  start_timer((int)enliteTimer, &enliteTx);
   time2enlite = 0.0;
 
   // Populate data if first time
   if (firstTime == 0) {
     if (enliteGlucose < 0) {
       for (i=8; i>=0; i--) {
-	newGlucose = 110 + 40*sin(enliteDataPhase);
+	newGlucose = 110 + 10*sin(enliteDataPhase);
 	enliteDataPhase += 2*3.14159265359/12;
 	if (enliteDataPhase >= 2*3.14159265359) enliteDataPhase -= 2*3.14159265359;
 	newISIG = (int)(round(newGlucose * 166.0 / 4.0)) & 0x0000FFFF;
@@ -566,15 +557,15 @@ void enliteTx(void)
   enliteTxMessage[7]  = enliteID[0];                             // ---
 
   enliteTxMessage[8]  = 13;                                      // Version: 1 Revision: 3
-  enliteTxMessage[9]  = 0x07;                                    // Unknown
+  enliteTxMessage[9]  = 0x1D;                                    // Unknown
   enliteTxMessage[10] = enliteISIGadj;                           // ISIG adjustment value
   enliteTxMessage[11] = (enliteNumSeq << 4) & 0xF0;              // Sequence number
 
   for (i=0; i<4; i++) enliteTxMessage[12+i] = enliteData[i];     // Recent ISIG data
   enliteTxMessage[16] = 0x00;                                    // Unknown but if 0x02 = Change sensor 
-  enliteTxMessage[17] = enliteBatLevel;                          // Battery level      - I suppose, not tested
-  enliteTxMessage[18] = enliteBatLevel+1;                        // Last Battery level - I suppose, not tested
-  enliteTxMessage[19] = 0x9F;                                    // Unknown, 0xA4 in mine, 0x9F in Sulka's. 0xA0 in my second sensor
+  enliteTxMessage[17] = 0x67;                                    // Unknown - but 0x00 when "Sensor Error"
+  enliteTxMessage[18] = 0x67;                                    // Last byte 17. Unknown. 0x00 when "Sensor Error"
+  enliteTxMessage[19] = 0x9D;                                    // Battery level
   for (i=4; i<9*2; i++) enliteTxMessage[20+i-4] = enliteData[i]; // More past ISIG data
   enliteTxMessage[34] = 0x00;                                    // Padding (CRC-16)
 
@@ -591,7 +582,7 @@ void enliteTx(void)
   }
 
   // Wait 17-seq seconds and retransmit incrementing modified sequence number
-  sleep(17-enliteNumSeq);
+  sleep((int)enliteIntPeriod[enliteNumSeq]);
  
   enliteTxMessage[11] += 1;
  
@@ -621,10 +612,155 @@ void processRx (char *message, int length)
   int txLen;
   float realTime;
 
-  if ( ((message[0]&0x00FF) == 0xA7) && 
+  if (mySentryActive == 1) {
+    if ((message[0]&0x00FF) == 0xA2) {
+    if ((message[4] & 0x00FF) == 0x09) {
+      pause_timer();
+      mySentrySyncOn = 1;
+      txMessage[0] = 0x81;
+      txMessage[1] = 0x0E;
+      txMessage[2] = 0x01;
+      txMessage[3] = 0xA2;
+      txMessage[4] = message[1];
+      txMessage[5] = message[2];
+      txMessage[6] = message[3];
+      txMessage[7] = 0x06;
+      txMessage[8] = message[5] & 0x7F;
+      txMessage[9]  = mySentryID[2];
+      txMessage[10] = mySentryID[1];
+      txMessage[11] = mySentryID[0];
+      txMessage[12] = 0x00;
+      txMessage[13] = message[4];
+      txMessage[14] = 0x00;
+      txMessage[15] = 0x00;
+      txMessage[16] = 0x00;
+      txLen = 17;
+      write(fdMMCommander, txMessage, txLen);
+      printTime();
+      printf (" TX : ");
+      for (i=3; i< txLen; i++) printf("%.2X ", (txMessage[i] & 0x00FF));
+      printf ("XX \n");
+      fflush(stdout);
+      resume_timer(5);
+    } else if ( ((message[4] & 0x00FF) == 0x0A) &&
+                (mySentrySyncOn == 1)) {
+      pause_timer();
+      txMessage[0] = 0x81;
+      txMessage[1] = 0x0E;
+      txMessage[2] = 0x01;
+      txMessage[3] = 0xA2;
+      txMessage[4] = message[1];
+      txMessage[5] = message[2];
+      txMessage[6] = message[3];
+      txMessage[7] = 0x06;
+      txMessage[8] = message[5] & 0x7F;
+      txMessage[9]  = mySentryID[2];
+      txMessage[10] = mySentryID[1];
+      txMessage[11] = mySentryID[0];
+      txMessage[12] = 0x00;
+      txMessage[13] = message[4];
+      txMessage[14] = 0x08;
+      txMessage[15] = 0x00;
+      txMessage[16] = 0x00;
+      txLen = 17;
+      write(fdMMCommander, txMessage, txLen);
+      printTime();
+      printf (" TX : ");
+      for (i=3; i< txLen; i++) printf("%.2X ", (txMessage[i] & 0x00FF));
+      printf ("XX \n");
+      fflush(stdout);
+      resume_timer(5);
+    } else if (((message[4] & 0x00FF) == 0x08)  &&
+	       (mySentrySyncOn == 1)) {
+      pause_timer();
+      txMessage[0] = 0x81;
+      txMessage[1] = 0x0E;
+      txMessage[2] = 0x01;
+      txMessage[3] = 0xA2;
+      txMessage[4] = message[1];
+      txMessage[5] = message[2];
+      txMessage[6] = message[3];
+      txMessage[7] = 0x06;
+      txMessage[8] = message[5] & 0x7F;
+      txMessage[9]  = mySentryID[2];
+      txMessage[10] = mySentryID[1];
+      txMessage[11] = mySentryID[0];
+      txMessage[12] = 0x00;
+      txMessage[13] = message[4];
+      txMessage[14] = 0x04;
+      txMessage[15] = 0x00;
+      txMessage[16] = 0x00;
+      txLen = 17;
+      write(fdMMCommander, txMessage, txLen);
+      printTime();
+      printf (" TX : ");
+      for (i=3; i< txLen; i++) printf("%.2X ", (txMessage[i] & 0x00FF));
+      printf ("XX \n");
+      fflush(stdout);
+      resume_timer(5);
+    } else if (((message[4] & 0x00FF) == 0x04)  &&
+	       (mySentrySyncOn == 1)) {
+      pause_timer();
+      txMessage[0] = 0x81;
+      txMessage[1] = 0x0E;
+      txMessage[2] = 0x01;
+      txMessage[3] = 0xA2;
+      txMessage[4] = message[1];
+      txMessage[5] = message[2];
+      txMessage[6] = message[3];
+      txMessage[7] = 0x06;
+      txMessage[8] = message[5] & 0x7F;
+      txMessage[9]  = mySentryID[2];
+      txMessage[10] = mySentryID[1];
+      txMessage[11] = mySentryID[0];
+      txMessage[12] = 0x00;
+      txMessage[13] = message[4];
+      txMessage[14] = 0x0B;
+      txMessage[15] = 0x00;
+      txMessage[16] = 0x00;
+      txLen = 17;
+      write(fdMMCommander, txMessage, txLen);
+      printTime();
+      printf (" TX : ");
+      for (i=3; i< txLen; i++) printf("%.2X ", (txMessage[i] & 0x00FF));
+      printf ("XX \n");
+      fflush(stdout);
+      resume_timer(5);
+    } else if ( ((message[4] & 0x00FF) == 0x0B)  &&
+                (mySentrySyncOn == 1)) {
+      pause_timer();
+      mySentrySyncOn = 0;
+      txMessage[0] = 0x81;
+      txMessage[1] = 0x0E;
+      txMessage[2] = 0x01;
+      txMessage[3] = 0xA2;
+      txMessage[4] = message[1];
+      txMessage[5] = message[2];
+      txMessage[6] = message[3];
+      txMessage[7] = 0x06;
+      txMessage[8] = message[5] & 0x7F;
+      txMessage[9]  = mySentryID[2];
+      txMessage[10] = mySentryID[1];
+      txMessage[11] = mySentryID[0];
+      txMessage[12] = 0x00;
+      txMessage[13] = message[4];
+      txMessage[14] = 0x00;
+      txMessage[15] = 0x00;
+      txMessage[16] = 0x00;
+      txLen = 17;
+      write(fdMMCommander, txMessage, txLen);
+      printTime();
+      printf (" TX : ");
+      for (i=3; i< txLen; i++) printf("%.2X ", (txMessage[i] & 0x00FF));
+      printf ("XX \n");
+      fflush(stdout);
+      resume_timer(5);
+    } 
+  }  
+  } else if ( ((message[0]&0x00FF) == 0xA7) && 
                ((message[1]&0x00FF) == (pumpID[2]&0x00FF)) &&
                ((message[2]&0x00FF) == (pumpID[1]&0x00FF)) && 
-       ((message[3]&0x00FF) == (pumpID[0]&0x00FF)) ) {
+               ((message[3]&0x00FF) == (pumpID[0]&0x00FF)) ) {
 
     if (message[4] != lastCommand) cmdRep = 0;
     else cmdRep++;

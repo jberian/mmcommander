@@ -9,6 +9,8 @@
 #include "txFilter.h"
 
 // Globals
+unsigned long timeCounter;
+
 #pragma vector = P1INT_VECTOR
 __interrupt void PORT1_ISR(void)
 {
@@ -68,6 +70,7 @@ void enablePushButtonInt (void)
 #pragma vector = T1_VECTOR
 __interrupt void TIMER1_ISR(void)
 {
+  
   // Stop Timer 1
   T1CTL &= 0xFC;
 
@@ -75,11 +78,17 @@ __interrupt void TIMER1_ISR(void)
   P1IFG = 0;  
   IRCON &= ~0x02;
   
-  // Reset state;
-  uartRxIndex = 0;
+  // Re-calibrate;
+  timeCounter++;
+  
+  if (timeCounter >= 0x0005D00) {
+    RFST = RFST_SIDLE;
+    RFST = RFST_SRX;
+    timeCounter = 0;
+  }
    
   // Clean interrupts and start Timer 1 in Free Run mode
-  //T1CTL = 0x01;
+  T1CTL = 0x01;
 }
 
 void stopTimerInt (void)
@@ -96,6 +105,7 @@ void stopTimerInt (void)
 
 void resetTimerCounter (void)
 {
+  timeCounter = 0;
   T1CNTL = 0x00;
 }
 
@@ -103,14 +113,15 @@ void enableTimerInt (void)
 {
  
   // Stop Timer 1
-  T1CTL &= 0xFC;
+  T1CTL = 0x0C;
 
   // Set Timer 1 timeout value
-  T1CC0H = 0x7F;
+  T1CC0H = 0xFF;
   T1CC0L = 0xFF;
   
   // Reset Timer 1 Counter
   T1CNTL = 0x00;
+  timeCounter = 0;
  
   // Set Timer 1 mode 
   T1CCTL0 = 0x44; 
@@ -120,4 +131,7 @@ void enableTimerInt (void)
   
   // Enable global interrupt (IEN0.EA = 1) and Timer 1 Interrupt (IEN1.1 = 1)
   EA = 1; IEN1 |= 0x02;  
+  
+  // Start Timer 1
+  T1CTL = 0x0E;
 }
