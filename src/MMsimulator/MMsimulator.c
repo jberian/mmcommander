@@ -51,6 +51,9 @@ int              rxPointer          ;
 int              readBytes          ;
 char             pumpID    [3]      ;
 char             pumpActive         ;
+char             remoteID  [3]      ;
+char             remoteActive       ;
+char             remoteSeqNum       ;
 char             enliteID  [3]      ;
 char             enliteData [9*2]   ;
 int              enliteWarmupCnt    ;
@@ -83,6 +86,28 @@ int              timerActive        ;
 int              mySentrySyncOn     ;
 int              mySentryActive     ;
 char             mySentryID  [3]    ;
+char             mySentrySeqNum     ;
+char             mySentryArrows     ;
+char             mySentryHour       ;
+char             mySentryMinute     ;
+char             mySentrySecond     ;
+char             mySentryDay        ;
+char             mySentryMonth      ;
+char             mySentryYear       ;
+int              mySentryRemInsulin ;
+int              mySentryBatVoltage ;
+char             mySentrySensorAge  ;
+char             mySentrySensorLeft ;
+char             mySentryNextCalHour;
+char             mySentryNextCalMin ;
+int              mySentryIOB        ;
+char             mySentrySensorHour  ;
+char             mySentrySensorMinute;
+char             mySentrySensorSecond;
+char             mySentrySensorDay   ;
+char             mySentrySensorMonth ;
+char             mySentrySensorYear  ;
+char             mySentryAlarm      ;
 struct itimerval timervalue         ;
 struct itimerval timervalue2        ;
 float            time2enlite        ;
@@ -106,6 +131,7 @@ int main(int argc, char **argv)
     printf("\n  Usage: %s [MMCommander_dev] <parameters>\n\n",argv[0]);;
     printf("     Parameters: -p  [pumpID]       -> Pump to be simulated.\n");
     printf("                 -e  [enliteID]     -> Enlite transmitter to be simulated.\n");
+    printf("                 -r  [remoteID]     -> Remote to be simulated.\n");
     printf("                 -g  [glucometerID] -> Glucometer to be simulated.\n");
     printf("                 -m  [mySentryID]   -> MySentry to be simulated.\n");
     printf("                 -n  [minutes]      -> Enable new sensor mode.\n");
@@ -116,7 +142,7 @@ int main(int argc, char **argv)
   // Init text
   printf("\n ----------------------------------------------------------------------------------------\n");
   printf(" |                                                                                      |\n");
-  printf(" | Medtronic system simulator.   v0.104                                                 |\n");
+  printf(" | Medtronic system simulator.   v0.105                                                 |\n");
   printf(" |                                                                                      |\n");
   printf(" |                                           Jesus Berian (jesus.berian@gmail.com)      |\n");
   printf(" |                                                                                      |\n");
@@ -130,6 +156,11 @@ int main(int argc, char **argv)
   enliteID[0]     = 0x00;
   enliteID[1]     = 0x00;
   enliteID[2]     = 0x00;
+  remoteID[0]     = 0x00;
+  remoteID[1]     = 0x00;
+  remoteID[2]     = 0x00;
+  remoteActive    = 0;
+  remoteSeqNum    = 0x80;
   glucometerID[0] = 0x00;
   glucometerID[1] = 0x00;
   glucometerID[2] = 0x00;
@@ -162,11 +193,32 @@ int main(int argc, char **argv)
   for (i=0; i<4096; i++) lastMessage[i] = 0x00;
   lastLength      = 0;
   repTimes        = 1;
+  mySentrySeqNum       = 0x00 ;
+  mySentryArrows       = 0x00 ;
+  mySentryHour         = 0x00 ;
+  mySentryMinute       = 0x00 ;
+  mySentrySecond       = 0x00 ;
+  mySentryDay          = 0x00 ;
+  mySentryMonth        = 0x00 ;
+  mySentryYear         = 0x00 ;
+  mySentryRemInsulin   = 0x00 ;
+  mySentryBatVoltage   = 0x00 ;
+  mySentrySensorAge    = 0x00 ;
+  mySentrySensorLeft   = 0x00 ;
+  mySentryNextCalHour  = 0x00 ;
+  mySentryNextCalMin   = 0x00 ;
+  mySentrySensorHour   = 0x00 ;
+  mySentrySensorMinute = 0x00 ;
+  mySentrySensorSecond = 0x00 ;
+  mySentrySensorDay    = 0x00 ;
+  mySentrySensorMonth  = 0x00 ;
+  mySentrySensorYear   = 0x00 ;
+  mySentryAlarm        = 0x00 ;
 
   strcpy(fdDev,argv[1]);
 
   // Get parameters
-  while ((c = getopt (argc, argv, "m:p:e:n:g:i:")) != -1)
+  while ((c = getopt (argc, argv, "m:p:e:n:g:i:r:")) != -1)
     switch (c)
       {
       case 'p':
@@ -178,6 +230,16 @@ int main(int argc, char **argv)
 	printf(" - Paradigm Veo 754 Pump simulated : %.2X%.2X%.2X\n",
            (pumpID[2]&0x00FF),(pumpID[1]&0x00FF),(pumpID[0]&0x00FF));
 	break;
+      case 'r':
+        sscanf(optarg,"%X",&param);
+	remoteID[0]   = (char)( param        & 0x000000FF);
+	remoteID[1]   = (char)((param >>  8) & 0x000000FF);
+	remoteID[2]   = (char)((param >> 16) & 0x000000FF);
+	remoteActive  = 1;
+	printf(" - Remote control simulated : %.2X%.2X%.2X\n",
+           (remoteID[2]&0x00FF),(remoteID[1]&0x00FF),(remoteID[0]&0x00FF));
+        printf(" - Press 'a' for button 'ACT', 'b' for button 'Bolus' and 's' for button 'Suspend'\n"); 
+	break;
       case 'm':
         sscanf(optarg,"%X",&param);
 	mySentryID[0]   = (char)( param        & 0x000000FF);
@@ -186,6 +248,7 @@ int main(int argc, char **argv)
 	mySentryActive  = 1;
 	printf(" - MySentry simulated : %.2X%.2X%.2X\n",
            (mySentryID[2]&0x00FF),(mySentryID[1]&0x00FF),(mySentryID[0]&0x00FF));
+	printf(" - Press 'm' or 'M' to generate alarms.\n");
 	break;
       case 'g':
         sscanf(optarg,"%X",&param);
@@ -277,7 +340,7 @@ int main(int argc, char **argv)
   }
 
   // Report simulation mode
-  if ((mySentryActive == 1) || (pumpActive == 1) || (enliteActive == 1)) {  
+  if ((mySentryActive == 1) || (pumpActive == 1) || (enliteActive == 1) || (remoteActive==1)) {  
     printf("\n - REMEMBER TO DISABLE THE TX FILTER!\n");
   } else {
     printf(" - Sniffer mode.\n");
@@ -291,6 +354,79 @@ int main(int argc, char **argv)
       fflush(stdout);
       c = getchar();
       switch(c) {
+      case 'a':
+      case 'A':
+	if (remoteActive == 1) {
+	  pause_timer();
+	  txMessage[0] = 0x81;
+	  txMessage[1] = 0x06;
+	  txMessage[2] = 0x80;
+	  txMessage[3] = 0xA6;
+	  txMessage[4] = remoteID[2];
+	  txMessage[5] = remoteID[1];
+	  txMessage[6] = remoteID[0];
+	  txMessage[7] = 0x86;
+	  txMessage[8] = remoteSeqNum;
+	  remoteSeqNum++;
+	  printf("\b");
+          printTime();
+          printf(" TX : ");
+          for (i=3; i<9; i++) printf("%.2X ",txMessage[i]&0x00FF);
+          printf("XX - (128 times) - Remote 'ACT' button pressed.\n");
+          write(fdMMCommander, txMessage, 9); 
+	  sleep(0.5);
+	  resume_timer(500);
+	}
+	break;
+      case 's':
+      case 'S':
+	if (remoteActive == 1) {
+	  pause_timer();
+	  txMessage[0] = 0x81;
+	  txMessage[1] = 0x06;
+	  txMessage[2] = 0x10;
+	  txMessage[3] = 0xA6;
+	  txMessage[4] = remoteID[2];
+	  txMessage[5] = remoteID[1];
+	  txMessage[6] = remoteID[0];
+	  txMessage[7] = 0x81;
+	  txMessage[8] = remoteSeqNum;
+	  remoteSeqNum++;
+	  printf("\b");
+          printTime();
+          printf(" TX : ");
+          for (i=3; i<9; i++) printf("%.2X ",txMessage[i]&0x00FF);
+          printf("XX - (16 times) - Remote 'Suspend' button pressed.\n");
+          write(fdMMCommander, txMessage, 9); 
+	  sleep(0.5);
+	  resume_timer(500);
+	}
+	break;
+      case 'b':
+      case 'B':
+	if (remoteActive == 1) {
+	  pause_timer();
+	  txMessage[0] = 0x81;
+	  txMessage[1] = 0x06;
+	  txMessage[2] = 0x10;
+	  txMessage[3] = 0xA6;
+	  txMessage[4] = remoteID[2];
+	  txMessage[5] = remoteID[1];
+	  txMessage[6] = remoteID[0];
+	  txMessage[7] = 0x88;
+	  txMessage[8] = remoteSeqNum;
+	  remoteSeqNum++;
+	  printf("\b");
+          printTime();
+          printf(" TX : ");
+          for (i=3; i<9; i++) printf("%.2X ",txMessage[i]&0x00FF);
+          printf("XX - (16 times) - Remote 'Bolus' button pressed.\n");
+          write(fdMMCommander, txMessage, 9); 
+	  sleep(0.5);
+	  resume_timer(500);
+	}	
+	break;
+
       case 'g':
       case 'G':
 	if (glucometerActive == 1) {
@@ -336,6 +472,60 @@ int main(int argc, char **argv)
 	  } else {
 	    printf(" Enlite Out-Of-Range Mode turned OFF\n");
 	    enliteOutOfRange = 0;
+	  }
+	}
+	break;
+      case 'm':
+      case 'M':
+	if (mySentryActive == 1) {
+	  pause_timer();
+	  printf("\b \n");
+	  printf(" MySentry alarms:\n");
+	  printf("  0 - None\n");
+	  printf("  1 - Low suspend\n");
+	  printf("  2 - High predicted\n");
+	  printf("  3 - Low predicted\n");
+	  printf("  4 - Rise rate\n");
+	  printf("  5 - Fall rate\n");
+	  printf("  6 - Low\n");
+	  printf("  7 - High\n");
+	  printf("  8 - Enter BG Now\n");
+          printf("\n - Enter alarm to be generated: ");
+          scanf("%d",&mySentryAlarm);
+	  if ((mySentryAlarm < 0) || (mySentryAlarm > 8)) mySentryAlarm = 0;
+	  switch(mySentryAlarm) {
+	  case 1:
+	    mySentryAlarm = 0x67;
+	    printf("\n \"Low suspend\" alarm set to be transmitted.\n\n");
+	    break;
+	  case 2:
+	    mySentryAlarm = 0x72;
+	    printf("\n \"High predicted\" alarm set to be transmitted.\n\n");
+	    break;
+	  case 3:
+	    mySentryAlarm = 0x73;
+	    printf("\n \"Low predicted\" alarm set to be transmitted.\n\n");
+	    break;
+	  case 4:
+	    mySentryAlarm = 0x74;
+	    printf("\n \"Rise rate\" alarm set to be transmitted.\n\n");
+	    break;
+	  case 5:
+	    mySentryAlarm = 0x75;
+	    printf("\n \"Fall rate\" alarm set to be transmitted.\n\n");
+	    break;
+	  case 6:
+	    mySentryAlarm = 0x66;
+	    printf("\n \"Low\" alarm set to be transmitted.\n\n");
+	    break;
+	  case 7:
+	    mySentryAlarm = 0x65;
+	    printf("\n \"High\" alarm set to be transmitted.\n\n");
+	    break;
+	  case 8:
+	    mySentryAlarm = 0x68;
+	    printf("\n \"Enter BG Now\" alarm set to be transmitted.\n\n");
+	    break;
 	  }
 	}
 	break;
@@ -495,10 +685,17 @@ int main(int argc, char **argv)
 void enliteTx(void)
 {
   int newISIG;
-  int i;
-  float newGlucose;
+  int filteredGlucoseIncrease;
+  int i,j;
+  float newGlucose[4];
+  int   newFilteredGlucose;
+  int   previousFilteredGlucose;
   float enliteTimer;
-  char  enliteTxMessage [4096] ;
+  char  enliteTxMessage   [128] ;
+  char  mySentryTxMessage [128] ;
+  int   mySentryTxLength;
+  time_t t;
+  struct tm tm;
 
   // Reset timer
   enliteTimer = (enlitePeriod[enliteNumSeq] + enliteIntPeriod[enliteNumSeq]) * 1000.0;
@@ -509,10 +706,13 @@ void enliteTx(void)
   if (firstTime == 0) {
     if (enliteGlucose < 0) {
       for (i=8; i>=0; i--) {
-	newGlucose = 110 + 10*sin(enliteDataPhase);
+	previousFilteredGlucose = newFilteredGlucose;
+	for (j=3; j>=1; j--) newGlucose[j] = newGlucose[j-1];
+	newGlucose[0] = 110 + 10*sin(enliteDataPhase) + (((float)rand())/65536*0.1);
+	newFilteredGlucose = (int)((newGlucose[0] + newGlucose[1] + newGlucose[2] + newGlucose[3])/4);
 	enliteDataPhase += 2*3.14159265359/12;
 	if (enliteDataPhase >= 2*3.14159265359) enliteDataPhase -= 2*3.14159265359;
-	newISIG = (int)(round(newGlucose * 166.0 / 4.0)) & 0x0000FFFF;
+	newISIG = (int)(round(newGlucose[0] * 166.0 / 4.0)) & 0x0000FFFF;
 	enliteData[i*2+1] = (char)( newISIG       & 0x000000FF);
         enliteData[i*2  ] = (char)((newISIG >> 8) & 0x000000FF);
       }
@@ -525,17 +725,64 @@ void enliteTx(void)
 
   // Get new ISIG and add it to the data;
   if (enliteGlucose < 0) {
-    newGlucose = 110 + 40*sin(enliteDataPhase);
+    previousFilteredGlucose = newFilteredGlucose;
+    for (j=3; j>=1; j--) newGlucose[j] = newGlucose[j-1];
+    newGlucose[0] = 110 + 10*sin(enliteDataPhase) + (((float)rand())/65536*0.1);
+    newFilteredGlucose = (int)((newGlucose[0] + newGlucose[1] + newGlucose[2] + newGlucose[3])/4);
     enliteDataPhase += 2*3.14159265359/12;
     if (enliteDataPhase >= 2*3.14159265359) enliteDataPhase -= 2*3.14159265359;
   } else {
-    newGlucose = enliteGlucose;
+    previousFilteredGlucose = (char)(enliteGlucose);
+    newFilteredGlucose = (char)(enliteGlucose);
+    newGlucose[0] = enliteGlucose;
   }
-  newISIG = (int)(round(newGlucose * 166.0 / 4.0)) & 0x0000FFFF;
-
+  newISIG = (int)(round(newGlucose[0] * 166.0 / 4.0)) & 0x0000FFFF;
   for (i=(9*2-1); i>1; i--) enliteData[i] = enliteData[i-2];
   enliteData[1] = (char)( newISIG       & 0x000000FF);
   enliteData[0] = (char)((newISIG >> 8) & 0x000000FF);
+
+  // Calculate MySentry data
+  t = time(NULL);
+  tm = *localtime(&t);
+
+  mySentryHour     = tm.tm_hour & 0x00FF;
+  mySentryMinute   = tm.tm_min  & 0x00FF;
+  mySentrySecond   = tm.tm_sec  & 0x00FF;
+  mySentryDay      = tm.tm_mday & 0x00FF;
+  mySentryMonth    = (tm.tm_mon + 1) & 0x00FF;
+  mySentryYear     = ((tm.tm_year + 1900) - 2000 ) & 0x00FF;
+  mySentrySensorHour   = mySentryHour   ;
+  mySentrySensorMinute = mySentryMinute ;
+  mySentrySensorSecond = 0x00           ;
+  mySentrySensorDay    = mySentryDay    ;
+  mySentrySensorMonth  = mySentryMonth  ;
+  mySentrySensorYear   = mySentryYear   ;
+
+  mySentrySensorAge   = 0x01;   // 1 hour 
+  mySentrySensorLeft  = 0x8F;   // 6 days minus 1 hour
+
+  mySentryRemInsulin  = 0x03E8; // 100.0 units
+  mySentryBatVoltage  = 0x05C8; // 1480 mV
+
+  mySentryIOB         -= 0x0004; // -0.1 units each time
+  if (mySentryIOB < 0) mySentryIOB += 0xC8; // +5 units
+
+  mySentryNextCalHour = 0x0C ;  // Next Cal hour = 12h 
+  mySentryNextCalMin  = 0x0D ;  // Next Cal min  = 13min
+
+  mySentrySeqNum++;
+  filteredGlucoseIncrease = newFilteredGlucose - previousFilteredGlucose;
+  if        (filteredGlucoseIncrease >  40) {
+    mySentryArrows    = 0x45;   // Double up
+  } else if (filteredGlucoseIncrease >  10) {
+    mySentryArrows    = 0x43;   // One arrow up
+  } else if (filteredGlucoseIncrease > -10) {
+    mySentryArrows    = 0x41;   // No arrows
+  } else if (filteredGlucoseIncrease > -40) {
+    mySentryArrows    = 0x47;   // One arrow down
+  } else {
+    mySentryArrows    = 0x49;   // Double down
+  }
 
   // Transmit a 32 bytes length message once adding CRC-16 at the end
   enliteTxMessage[0]  = 0xC1;
@@ -581,9 +828,124 @@ void enliteTx(void)
     printf(" - \033[1;31mOut Of Range\033[0m\n");
   }
 
+  // Transmit MySentry messages if pump and mysentry simulation are enabled
+  if ((pumpActive == 1) && (mySentryActive == 1)) {
+    mySentryTxMessage[ 0] = 0x81                                    ;
+    mySentryTxMessage[ 1] = 0x29                                    ;
+    mySentryTxMessage[ 2] = 0x01                                    ;
+					                             
+    mySentryTxMessage[ 3] = 0xA2                                    ; // MySentry Message header
+    mySentryTxMessage[ 4] = pumpID [2]                              ;
+    mySentryTxMessage[ 5] = pumpID [1]                              ;
+    mySentryTxMessage[ 6] = pumpID [0]                              ;
+    mySentryTxMessage[ 7] = 0x04                                    ; // Info message
+    mySentryTxMessage[ 8] = mySentrySeqNum                          ; // Sequence number
+    mySentryTxMessage[ 9] = mySentryArrows                          ; // Arrows info
+    mySentryTxMessage[10] = 0x80 | mySentryHour                     ; // Pump time - hour
+    mySentryTxMessage[11] = mySentryMinute                          ; // Pump time - minute
+    mySentryTxMessage[12] = mySentrySecond                          ; // Pump time - second
+    mySentryTxMessage[13] = mySentryYear                            ; // Pump date - year
+    mySentryTxMessage[14] = mySentryMonth                           ; // Pump date - month
+    mySentryTxMessage[15] = mySentryDay                             ; // Pump date - day
+    mySentryTxMessage[16] = 0x01                                    ; // Unknown
+    mySentryTxMessage[17] = (newFilteredGlucose      >> 1) & 0x00FF ; // Current  glucose value / 2.0
+    mySentryTxMessage[18] = (previousFilteredGlucose >> 1) & 0x00FF ; // Previous glucose value / 2.0
+    mySentryTxMessage[19] = 0x00                                    ; // Unknown
+    mySentryTxMessage[20] = (mySentryRemInsulin >> 16) & 0x00FF     ; // Remaining insulin (high byte)
+    mySentryTxMessage[21] = (mySentryRemInsulin      ) & 0x00FF     ; // Remaining insulin (low byte) -> (mult 10)
+    mySentryTxMessage[22] = 0x04                                    ; // Unknown
+    mySentryTxMessage[23] = 0x03                                    ; // Unknown
+    mySentryTxMessage[24] = (mySentryBatVoltage >> 16) & 0x00FF     ; // Pump battery voltage in mV (high byte)
+    mySentryTxMessage[25] = (mySentryBatVoltage      ) & 0x00FF     ; // Pump battery voltage in mV (low byte)
+    mySentryTxMessage[26] = mySentrySensorAge                       ; // Sensor age in hours
+    mySentryTxMessage[27] = mySentrySensorLeft                      ; // Sensor hours left
+    mySentryTxMessage[28] = mySentryNextCalHour                     ; // Next scheduled calibration time - hour
+    mySentryTxMessage[29] = mySentryNextCalMin                      ; // Next scheduled calibration time - minute
+    mySentryTxMessage[30] = (mySentryIOB        >> 16) & 0x00FF     ; // Active insulin in 0.025 units (high byte)
+    mySentryTxMessage[31] = (mySentryIOB             ) & 0x00FF     ; // Active insulin in 0.025 units (low byte)
+    mySentryTxMessage[32] = 0x00 | 
+                            ((previousFilteredGlucose & 0x01) << 1) |
+                            ( newFilteredGlucose & 0x01 )           ; // low bits for glucose values
+    mySentryTxMessage[33] = 0x00                                    ; // Unknown
+    mySentryTxMessage[34] = 0x01                                    ; // Unknown
+    mySentryTxMessage[35] = 0x10                                    ; // Unknown
+    mySentryTxMessage[36] = mySentrySensorHour                      ; // Current reading timestamp - Hour
+    mySentryTxMessage[37] = mySentrySensorMinute                    ; // Current reading timestamp - Minute
+    mySentryTxMessage[38] = mySentrySensorSecond                    ; // Current reading timestamp - Second
+    mySentryTxMessage[39] = mySentrySensorYear                      ; // Current reading timestamp - Year
+    mySentryTxMessage[40] = mySentrySensorMonth                     ; // Current reading timestamp - Month
+    mySentryTxMessage[41] = mySentrySensorDay                       ; // Current reading timestamp - Day
+    mySentryTxMessage[42] = 0x00                                    ; // Padding
+    mySentryTxMessage[43] = 0x00                                    ; // Padding
+    mySentryTxLength = 44;
+
+    usleep(500000);
+    printTime();
+    printf(" TX : ");
+    for (i=3; i<mySentryTxLength; i++) printf("%.2X ",mySentryTxMessage[i]&0x00FF);
+    printf("XX");
+    if (enliteOutOfRange == 0) {
+      write(fdMMCommander, mySentryTxMessage, mySentryTxLength); 
+      printf("\n");
+    } else {
+      printf(" - \033[1;31mOut Of Range\033[0m\n");
+    }    
+
+    sleep(5);
+    // Generate alarm if necessary
+    if (mySentryAlarm != 0x00) {
+      mySentrySeqNum++;
+      mySentryTxMessage[ 0] = 0x81                                    ;
+      mySentryTxMessage[ 1] = 0x07                                    ;
+      mySentryTxMessage[ 2] = 0x01                                    ;
+   					                             
+      mySentryTxMessage[ 3] = 0xA2                                    ; // MySentry Message header
+      mySentryTxMessage[ 4] = pumpID [2]                              ;
+      mySentryTxMessage[ 5] = pumpID [1]                              ;
+      mySentryTxMessage[ 6] = pumpID [0]                              ;
+      mySentryTxMessage[ 7] = 0x02                                    ; // Alarm message
+      mySentryTxMessage[ 8] = mySentrySeqNum                          ; // Sequence number
+      mySentryTxMessage[ 9] = mySentryAlarm                           ; // Alarm code
+      mySentryTxLength = 10;
+    }
+
+    printTime();
+    printf(" TX : ");
+    for (i=3; i<mySentryTxLength; i++) printf("%.2X ",mySentryTxMessage[i]&0x00FF);
+    printf("XX");
+    if (enliteOutOfRange == 0) {
+      write(fdMMCommander, mySentryTxMessage, mySentryTxLength); 
+      printf("\n");
+    } else {
+      printf(" - \033[1;31mOut Of Range\033[0m\n");
+    }    
+
+    sleep(5);
+    // If alarm, flip high bit.
+    if (mySentryAlarm != 0x00) {
+      mySentryTxMessage[8] = mySentryTxMessage[8]^0x80;
+    }
+    printTime();
+    printf(" TX : ");
+    for (i=3; i<mySentryTxLength; i++) printf("%.2X ",mySentryTxMessage[i]&0x00FF);
+    printf("XX");
+    if (enliteOutOfRange == 0) {
+      write(fdMMCommander, mySentryTxMessage, mySentryTxLength); 
+      printf("\n");
+    } else {
+      printf(" - \033[1;31mOut Of Range\033[0m\n");
+    }    
+
+    mySentryAlarm = 0x00;
+
+  }
+
   // Wait 17-seq seconds and retransmit incrementing modified sequence number
-  sleep((int)enliteIntPeriod[enliteNumSeq]);
- 
+  if ((pumpActive == 1) && (mySentryActive == 1)) {
+    sleep((int)enliteIntPeriod[enliteNumSeq] - 10.5);
+  } else {
+    sleep((int)enliteIntPeriod[enliteNumSeq]);
+  }
   enliteTxMessage[11] += 1;
  
   printTime();
