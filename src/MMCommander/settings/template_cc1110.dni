@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=1439023704
+Checksum=-769370399
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -45,13 +45,15 @@ ByteLimit=50
 ShowArgs=0
 [Disassembly]
 MixedMode=1
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[BreakpointUsageDialog]
+Placement=_ 738 374 1183 656
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Breakpoints]
 Bp0=_ "STD_CODE" "{$PROJ_DIR$\conf.c}.1.1@1" 0 0 0 0 "" 0 ""
 Count=1

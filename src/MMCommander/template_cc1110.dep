@@ -2,15 +2,15 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>2787298515</fileChecksum>
+  <fileChecksum>3727553825</fileChecksum>
   <configuration>
     <name>Debug</name>
     <outputs>
-      <file>$PROJ_DIR$\configuration.h</file>
+      <file>$PROJ_DIR$\constants.h</file>
       <file>$PROJ_DIR$\globals.h</file>
       <file>$PROJ_DIR$\crc_4b6b.h</file>
       <file>$PROJ_DIR$\hal_cc8051.h</file>
-      <file>$PROJ_DIR$\constants.h</file>
+      <file>$PROJ_DIR$\configuration.h</file>
       <file>$PROJ_DIR$\hal_defs.h</file>
       <file>$PROJ_DIR$\hal_types.h</file>
       <file>$PROJ_DIR$\init.h</file>
@@ -18,106 +18,126 @@
       <file>$PROJ_DIR$\ioCCxx10_bitdef.h</file>
       <file>$PROJ_DIR$\txFilter.h</file>
       <file>$PROJ_DIR$\usb\others\clock.c</file>
-      <file>$PROJ_DIR$\usb\class_cdc\usb_cdc_descriptor.s51</file>
-      <file>$PROJ_DIR$\usb\class_cdc\usb_cdc_hooks.c</file>
       <file>$PROJ_DIR$\usb\others\hal_board.c</file>
       <file>$PROJ_DIR$\usb\others\hal_int.c</file>
       <file>$PROJ_DIR$\usb\others\hal_mcu.c</file>
       <file>$PROJ_DIR$\usb\others\hal_uart_usb.c</file>
+      <file>$PROJ_DIR$\usb\class_cdc\usb_cdc_hooks.c</file>
+      <file>$PROJ_DIR$\usb\class_cdc\usb_cdc_descriptor.s51</file>
       <file>$PROJ_DIR$\usb\library\usb_descriptor_parser.c</file>
-      <file>$PROJ_DIR$\usb\class_cdc\usb_firmware_library_config.c</file>
-      <file>$PROJ_DIR$\usb\library\usb_standard_requests.c</file>
-      <file>$PROJ_DIR$\init.c</file>
       <file>$PROJ_DIR$\usb\library\usb_framework.c</file>
+      <file>$PROJ_DIR$\usb\class_cdc\usb_firmware_library_config.c</file>
       <file>$PROJ_DIR$\usb\library\usb_interrupt.c</file>
-      <file>$PROJ_DIR$\crc_4b6b.c</file>
+      <file>$PROJ_DIR$\usb\library\usb_standard_requests.c</file>
       <file>$PROJ_DIR$\usb\library\usb_suspend.c</file>
       <file>$PROJ_DIR$\usb\class_cdc\usb_uart.c</file>
-      <file>$TOOLKIT_DIR$\inc\ioCC1111.h</file>
-      <file>$PROJ_DIR$\usb\others\hal_mcu.h</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_firmware_library_config.pbi</file>
-      <file>$PROJ_DIR$\usb\others\clock.h</file>
-      <file>$TOOLKIT_DIR$\config\devices\Texas Instruments\lnk51ew_cc1111F32.xcl</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_framework.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Exe\MMCommander.hex</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\clock.pbi</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_int.pbi</file>
-      <file>$PROJ_DIR$\usb\others\hal_assert.h</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_standard_requests.r51</file>
-      <file>$PROJ_DIR$\usb\others\util_buffer.h</file>
-      <file>$PROJ_DIR$\usb\class_cdc\usb_firmware_library_config.h</file>
-      <file>$TOOLKIT_DIR$\lib\clib\cl-pli-nlxd-1e16x01.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\init.pbi</file>
-      <file>$PROJ_DIR$\usb\library\usb_standard_requests.h</file>
-      <file>$PROJ_DIR$\usb\library\usb_framework.h</file>
-      <file>$PROJ_DIR$\usb\others\hal_defs.h</file>
+      <file>$PROJ_DIR$\usb\others\util_buffer.c</file>
+      <file>$PROJ_DIR$\crc_4b6b.c</file>
+      <file>$PROJ_DIR$\init.c</file>
+      <file>$PROJ_DIR$\interrupts.c</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_interrupt.r51</file>
       <file>$PROJ_DIR$\usb\others\hal_cc8051.h</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_uart.pbi</file>
-      <file>$PROJ_DIR$\usb\others\hal_int.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_cdc_hooks.pbi</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_suspend.pbi</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_firmware_library_config.r51</file>
+      <file>$PROJ_DIR$\usb\others\hal_types.h</file>
+      <file>$PROJ_DIR$\usb\class_cdc\usb_firmware_library_headers.h</file>
       <file>$PROJ_DIR$\usb\class_cdc\usb_uart.h</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Exe\MMCommander.d51</file>
-      <file>$PROJ_DIR$\usb\class_cdc\usb_firmware_library_headers.h</file>
-      <file>$PROJ_DIR$\usb\others\hal_types.h</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_firmware_library_config.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_uart_usb.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_suspend.pbi</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_cdc_hooks.pbi</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_interrupt.r51</file>
-      <file>$PROJ_DIR$\usb\others\hal_led.h</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\List\MMCommander.html</file>
-      <file>$PROJ_DIR$\usb\library\usb_descriptor_parser.h</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\template_cc1110.pbd</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\MMCommander.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_int.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_framework.pbi</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_interrupt.pbi</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_cdc_descriptor.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\MMCommander.pbi</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\medtronicRF.pbi</file>
+      <file>$PROJ_DIR$\usb\others\hal_int.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_uart.pbi</file>
+      <file>$PROJ_DIR$\usb\library\usb_framework.h</file>
+      <file>$PROJ_DIR$\usb\others\hal_defs.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\init.pbi</file>
+      <file>$PROJ_DIR$\usb\library\usb_standard_requests.h</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl-pli-nlxd-1e16x01.r51</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_standard_requests.r51</file>
+      <file>$PROJ_DIR$\usb\class_cdc\usb_firmware_library_config.h</file>
+      <file>$TOOLKIT_DIR$\config\devices\Texas Instruments\lnk51ew_cc1111F32.xcl</file>
+      <file>$PROJ_DIR$\usb\others\util_buffer.h</file>
+      <file>$PROJ_DIR$\usb\others\hal_assert.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_int.pbi</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\clock.pbi</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_framework.r51</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Exe\MMCommander.hex</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\clock.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\crc_4b6b.pbi</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\medtronicRF.pbi</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_mcu.pbi</file>
       <file>$PROJ_DIR$\usb\class_cdc\usb_cdc.h</file>
+      <file>$PROJ_DIR$\medtronicRF.c</file>
+      <file>$PROJ_DIR$\MMCommander.c</file>
+      <file>$PROJ_DIR$\txFilter.c</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_firmware_library_config.pbi</file>
+      <file>$PROJ_DIR$\usb\others\hal_board.h</file>
+      <file>$PROJ_DIR$\usb\others\hal_mcu.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\init.r51</file>
+      <file>$PROJ_DIR$\usb\library\usb_suspend.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\crc_4b6b.r51</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\util_buffer.r51</file>
+      <file>$TOOLKIT_DIR$\inc\ioCC1110.h</file>
+      <file>$TOOLKIT_DIR$\inc\ioCC1111.h</file>
+      <file>$PROJ_DIR$\usb\others\clock.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\interrupts.pbi</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_mcu.r51</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_board.r51</file>
+      <file>$PROJ_DIR$\usb\library\usb_descriptor.h</file>
+      <file>$PROJ_DIR$\usb\others\hal_uart.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_int.r51</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\MMCommander.pbi</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_cdc_descriptor.r51</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_interrupt.pbi</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_framework.pbi</file>
+      <file>$PROJ_DIR$\usb\library\usb_descriptor_parser.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_uart_usb.r51</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\MMCommander.r51</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\template_cc1110.pbd</file>
+      <file>$PROJ_DIR$\usb\others\hal_led.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\List\MMCommander.html</file>
       <file>$PROJ_DIR$\medtronicRF.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\crc_4b6b.pbi</file>
       <file>$PROJ_DIR$\usb\library\usb_reg.h</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_uart.r51</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_descriptor_parser.r51</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\medtronicRF.r51</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\txFilter.r51</file>
       <file>$PROJ_DIR$\usb\library\usb_framework_structs.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_board.pbi</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\interrupts.r51</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_cdc_hooks.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_board.pbi</file>
+      <file>$PROJ_DIR$\usb\library\usb_interrupt.h</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_suspend.r51</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_descriptor_parser.pbi</file>
-      <file>$PROJ_DIR$\usb\library\usb_interrupt.h</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\txFilter.pbi</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_uart_usb.pbi</file>
-      <file>$PROJ_DIR$\usb\others\util_buffer.c</file>
-      <file>$PROJ_DIR$\interrupts.c</file>
-      <file>$PROJ_DIR$\medtronicRF.c</file>
-      <file>$PROJ_DIR$\MMCommander.c</file>
-      <file>$PROJ_DIR$\txFilter.c</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_standard_requests.pbi</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_uart_usb.pbi</file>
       <file>$PROJ_DIR$\MMCommander\Debug\Obj\util_buffer.pbi</file>
-      <file>$PROJ_DIR$\usb\others\hal_board.h</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\util_buffer.r51</file>
-      <file>$TOOLKIT_DIR$\inc\ioCC1110.h</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\init.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\crc_4b6b.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\interrupts.pbi</file>
-      <file>$PROJ_DIR$\usb\library\usb_suspend.h</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_mcu.r51</file>
-      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_board.r51</file>
-      <file>$PROJ_DIR$\usb\library\usb_descriptor.h</file>
-      <file>$PROJ_DIR$\usb\others\hal_uart.h</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_cdc_hooks.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\interrupts.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_uart_usb.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\medtronicRF.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\clock.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_firmware_library_config.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_descriptor_parser.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\util_buffer.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\MMCommander.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_interrupt.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_mcu.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\init.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_int.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_uart.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\crc_4b6b.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\txFilter.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_framework.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_standard_requests.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\usb_suspend.__cstat.et</file>
+      <file>$PROJ_DIR$\MMCommander\Debug\Obj\hal_board.__cstat.et</file>
     </outputs>
     <file>
-      <name>[ROOT_NODE]</name>
+      <name>$PROJ_DIR$\..\..\..\..\..\..\..\[ROOT_NODE]</name>
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 49 58 33</file>
+          <file> 37 86 53</file>
         </tool>
       </outputs>
     </file>
@@ -125,44 +145,22 @@
       <name>$PROJ_DIR$\usb\others\clock.c</name>
       <outputs>
         <tool>
+          <name>ICC8051</name>
+          <file> 54 66 73 76 72 82 64 96 92 83 93 97 91 33 52 29 45 99 90 67</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 109</file>
+        </tool>
+        <tool>
           <name>BICOMP</name>
-          <file> 34</file>
+          <file> 51</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 30 51 27 96</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\usb\class_cdc\usb_cdc_descriptor.s51</name>
-      <outputs>
-        <tool>
-          <name>A8051</name>
-          <file> 65</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>A8051</name>
-          <file> 103 71</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\usb\class_cdc\usb_cdc_hooks.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 55</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 50 39 103 78 51 59 84 43 44 73 42 100 71 48 57</file>
+          <name>ICC8051</name>
+          <file> 70 34 69 68 26 12 63 62 41 30 13 38 14 15 75 48 36 27 6 5 3 9 0 1 4 28 2 8 87 10 58 59 7 60 16 35 46 74 94 81 98 40 89 43 65 57 85 18 20 19 21 22 23 24 25 49</file>
         </tool>
       </inputs>
     </file>
@@ -170,59 +168,79 @@
       <name>$PROJ_DIR$\usb\others\hal_board.c</name>
       <outputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 81</file>
+          <name>__cstat</name>
+          <file> 124</file>
         </tool>
-      </outputs>
-      <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 51 28 94 44 27 96 45</file>
+          <file> 95</file>
         </tool>
-      </inputs>
+      </outputs>
     </file>
     <file>
       <name>$PROJ_DIR$\usb\others\hal_int.c</name>
       <outputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 35</file>
+          <name>__cstat</name>
+          <file> 117</file>
         </tool>
-      </outputs>
-      <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 51 44 47 94 27 96 45</file>
+          <file> 50</file>
         </tool>
-      </inputs>
+      </outputs>
     </file>
     <file>
       <name>$PROJ_DIR$\usb\others\hal_mcu.c</name>
       <outputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 70</file>
+          <name>__cstat</name>
+          <file> 115</file>
         </tool>
-      </outputs>
-      <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 51 28 30 27 96</file>
+          <file> 56</file>
         </tool>
-      </inputs>
+      </outputs>
     </file>
     <file>
       <name>$PROJ_DIR$\usb\others\hal_uart_usb.c</name>
       <outputs>
         <tool>
+          <name>__cstat</name>
+          <file> 107</file>
+        </tool>
+        <tool>
           <name>BICOMP</name>
-          <file> 86</file>
+          <file> 103</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb\class_cdc\usb_cdc_hooks.c</name>
+      <outputs>
+        <tool>
+          <name>__cstat</name>
+          <file> 105</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 31</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb\class_cdc\usb_cdc_descriptor.s51</name>
+      <outputs>
+        <tool>
+          <name>A8051</name>
+          <file> 78</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 51 104 94 44 27 96 45 38 47 28 48</file>
+          <name>A8051</name>
+          <file> 74 57</file>
         </tool>
       </inputs>
     </file>
@@ -230,98 +248,64 @@
       <name>$PROJ_DIR$\usb\library\usb_descriptor_parser.c</name>
       <outputs>
         <tool>
+          <name>__cstat</name>
+          <file> 111</file>
+        </tool>
+        <tool>
           <name>BICOMP</name>
-          <file> 83</file>
+          <file> 100</file>
         </tool>
       </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 50 39 103 78 51 59 84 43 44 73 42 100</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\usb\class_cdc\usb_firmware_library_config.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 29</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 50 39 103 78 51 59 84 43 44 73 42 100</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\usb\library\usb_standard_requests.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 92</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 50 39 103 78 51 59 84 43 44 73 42 100 94 27 96 45</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\init.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 41</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 6 5 3 9 96 4 1 0</file>
-        </tool>
-      </inputs>
     </file>
     <file>
       <name>$PROJ_DIR$\usb\library\usb_framework.c</name>
       <outputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 63</file>
+          <name>__cstat</name>
+          <file> 121</file>
         </tool>
-      </outputs>
-      <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 50 39 103 78 51 59 84 43 44 73 42 100 47 94 27 96 45</file>
+          <file> 80</file>
         </tool>
-      </inputs>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb\class_cdc\usb_firmware_library_config.c</name>
+      <outputs>
+        <tool>
+          <name>__cstat</name>
+          <file> 110</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 61</file>
+        </tool>
+      </outputs>
     </file>
     <file>
       <name>$PROJ_DIR$\usb\library\usb_interrupt.c</name>
       <outputs>
         <tool>
+          <name>__cstat</name>
+          <file> 114</file>
+        </tool>
+        <tool>
           <name>BICOMP</name>
-          <file> 64</file>
+          <file> 79</file>
         </tool>
       </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 50 39 103 78 51 59 84 43 44 73 42 100 94 27 96 45 30</file>
-        </tool>
-      </inputs>
     </file>
     <file>
-      <name>$PROJ_DIR$\crc_4b6b.c</name>
+      <name>$PROJ_DIR$\usb\library\usb_standard_requests.c</name>
       <outputs>
         <tool>
+          <name>__cstat</name>
+          <file> 122</file>
+        </tool>
+        <tool>
           <name>BICOMP</name>
-          <file> 69</file>
+          <file> 102</file>
         </tool>
       </outputs>
     </file>
@@ -329,74 +313,92 @@
       <name>$PROJ_DIR$\usb\library\usb_suspend.c</name>
       <outputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 54</file>
+          <name>__cstat</name>
+          <file> 123</file>
         </tool>
-      </outputs>
-      <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 50 39 103 78 51 59 84 43 44 73 42 100 47 28 94 27 96 45</file>
+          <file> 32</file>
         </tool>
-      </inputs>
+      </outputs>
     </file>
     <file>
       <name>$PROJ_DIR$\usb\class_cdc\usb_uart.c</name>
       <outputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 46</file>
+          <name>__cstat</name>
+          <file> 118</file>
         </tool>
-      </outputs>
-      <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 51 94 44 27 96 45 47 57 71 39 50 103 78 59 84 43 73 42 100 48 38</file>
+          <file> 39</file>
         </tool>
-      </inputs>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb\others\util_buffer.c</name>
+      <outputs>
+        <tool>
+          <name>__cstat</name>
+          <file> 112</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 104</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\crc_4b6b.c</name>
+      <outputs>
+        <tool>
+          <name>__cstat</name>
+          <file> 119</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 88</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\init.c</name>
+      <outputs>
+        <tool>
+          <name>__cstat</name>
+          <file> 116</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 42</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\interrupts.c</name>
+      <outputs>
+        <tool>
+          <name>__cstat</name>
+          <file> 106</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 71</file>
+        </tool>
+      </outputs>
     </file>
     <file>
       <name>$PROJ_DIR$\MMCommander\Debug\Exe\MMCommander.d51</name>
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 58 33</file>
+          <file> 86 53</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 31 61 68 98 102 62 101 53 97 79 76 77 65 80 75 52 32 56 37 82 74 95 40</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\usb\others\util_buffer.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 93</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 38 51 94 44 27 96 45 47 36</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\interrupts.c</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 99</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 1 6 4 9 96 2 8 72 48 104 51 10</file>
+          <file> 47 54 66 73 76 72 82 64 96 92 83 93 78 97 91 33 52 29 45 99 90 67 44</file>
         </tool>
       </inputs>
     </file>
@@ -404,54 +406,40 @@
       <name>$PROJ_DIR$\medtronicRF.c</name>
       <outputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 67</file>
+          <name>__cstat</name>
+          <file> 108</file>
         </tool>
-      </outputs>
-      <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 9 96 72 2 4 1 6 48 104 51 10 0 8</file>
+          <file> 55</file>
         </tool>
-      </inputs>
+      </outputs>
     </file>
     <file>
       <name>$PROJ_DIR$\MMCommander.c</name>
       <outputs>
         <tool>
-          <name>ICC8051</name>
-          <file> 61 68 98 102 62 101 53 97 79 76 77 80 75 52 32 56 37 82 74 95</file>
+          <name>__cstat</name>
+          <file> 113</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 66</file>
+          <file> 77</file>
         </tool>
       </outputs>
-      <inputs>
-        <tool>
-          <name>ICC8051</name>
-          <file> 2 7 4 8 72 94 51 44 27 96 45 104 48 0 11 30 24 14 28 15 47 16 17 38 21 6 5 3 9 1 88 10 89 91 13 50 39 103 78 59 84 43 73 42 100 71 57 18 19 22 23 20 25 26 87 36</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 2 7 4 8 72 94 51 44 27 96 45 104 48 0</file>
-        </tool>
-      </inputs>
     </file>
     <file>
       <name>$PROJ_DIR$\txFilter.c</name>
       <outputs>
         <tool>
-          <name>BICOMP</name>
-          <file> 85</file>
+          <name>__cstat</name>
+          <file> 120</file>
         </tool>
-      </outputs>
-      <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 0</file>
+          <file> 101</file>
         </tool>
-      </inputs>
+      </outputs>
     </file>
   </configuration>
 </project>
